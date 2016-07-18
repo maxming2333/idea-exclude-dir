@@ -1,0 +1,39 @@
+{
+  "name": "idea-exclude-dir",
+  "version": "1.0.0",
+  "description": "exclude dir in idea(webstorm, intelli IDEA ......)",
+  "main": "index.js",
+  "keywords": [
+    "idea",
+    "exclude",
+    "webstorm",
+    "intelli",
+    "index",
+    "indexing"
+  ],
+  "dependencies": {
+    "xml2js": "^0.4.17"
+  },
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "maxming",
+      "email": "maxming2333@gmail.com"
+    }
+  ],
+  "directories": {},
+  "homepage": "https://github.com/maxming2333/idea-exclude-dir",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:maxming2333/idea-exclude-dir.git",
+    "web": "https://github.com/maxming2333/idea-exclude-dir.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maxming2333/idea-exclude-dir/issues",
+    "email": "maxming2333@gmail.com"
+  },
+  "engines": {
+    "node": ">= 1.0.0"
+  },
+  "author": "maxming <maxming2333@gmail.com> (http://maxming.com)"
+}

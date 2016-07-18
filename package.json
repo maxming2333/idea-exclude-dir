@@ -1,6 +1,6 @@
 {
   "name": "idea-exclude-dir",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "exclude dir in idea(webstorm, intelli IDEA ......)",
   "main": "index.js",
   "keywords": [

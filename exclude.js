@@ -27,7 +27,7 @@ exports.excludeDir = function (exDir) {
     })
   }
 
-  var modulesFile = path.join(exports.CWD, '.idea', 'modules.xml');
+  var modulesFile = path.join(exports.cwd, '.idea', 'modules.xml');
   var prefix = '$MODULE_DIR$/';
 
   // 检测是否含有 modules.xml 文件
@@ -88,7 +88,7 @@ exports.excludeDir = function (exDir) {
     // 获取项目 xxx.iml 地址
     var filePath = result.project.component[0].modules[0].module[0].$.filepath;
     if (filePath) {
-      var iml = filePath.replace(/.*\/(\.idea.*)/ig, path.join(exports.CWD, '$1'));
+      var iml = filePath.replace(/.*\/(\.idea.*)/ig, path.join(exports.cwd, '$1'));
       getProjectIML(iml);
     }
   });

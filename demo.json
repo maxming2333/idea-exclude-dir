@@ -1,0 +1,10 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "this is demo json file",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npm install idea-exclude-dir && node ./node_modules/idea-exclude-dir/index.js"
+  },
+  "excludeFolder": ["/log", "/node_modules", "/.idea"]
+}

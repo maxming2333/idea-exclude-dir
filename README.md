@@ -6,7 +6,7 @@ exclude dir in idea(webstorm, intelli IDEA ......)
 
 使用 `jetbrains` 的 idea 应该都会产生同样的痛苦
 
-如果在tnpm安装期间不设置项目下的 `node_modules`文件夹 为 `exclude` 那么势必会卡死整个idea
+如果在cnpm安装期间不设置项目下的 `node_modules`文件夹 为 `exclude` 那么势必会卡死整个idea
 
 因为如果不设置 `exclude` 那么 idea 会`indexing` node_modules下的所有文件
 
@@ -28,7 +28,7 @@ npm install idea-exclude-dir --save-dev
 #### 在`scripts`字段增加以下代码
 ```js
 "scripts": {
-  "preinstall": "npm install idea-exclude-dir && node ./node_modules/idea-exclude-dir/index.js"
+  "preinstall": "npm install idea-exclude-dir && node ./node_modules/idea-exclude-dir/index-cli.js"
 }
 ```
 

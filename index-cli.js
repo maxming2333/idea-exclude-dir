@@ -1,7 +1,8 @@
-var path = require('path');
-var exclude = require('./index.js');
-var CWD = process.cwd();
-var pkg = require( path.join(CWD, 'package.json') );
+const path = require('path');
+const exclude = require('./index.js');
+const CWD = process.cwd();
+const pkg = require(path.join(CWD, 'package.json'));
+const list = pkg.config && pkg.config.idea && pkg.config.idea.index;
 
 exclude.cwd = CWD;
-exclude.excludeDir(pkg.excludeFolder || ['/node_modules']);
+exclude.excludeDir(list || ['/node_modules']);

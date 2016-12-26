@@ -1,6 +1,6 @@
 {
   "name": "idea-exclude-dir",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "exclude dir in idea(webstorm, intelli IDEA ......)",
   "main": "index.js",
   "keywords": [
@@ -12,6 +12,7 @@
     "indexing"
   ],
   "dependencies": {
+    "co": "^4.6.0",
     "xml2js": "^0.4.17"
   },
   "license": "MIT",
@@ -33,7 +34,7 @@
     "email": "maxming2333@gmail.com"
   },
   "engines": {
-    "node": ">= 1.0.0"
+    "node": ">= 4.0.0"
   },
   "author": "maxming <maxming2333@gmail.com> (http://maxming.com)"
 }

@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require('path');
 const exclude = require('./index.js');
 const CWD = process.cwd();

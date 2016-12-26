@@ -35,7 +35,13 @@ npm install idea-exclude-dir --save-dev
 #### 增加`excludeFolder`字段
 
 ```js
-"excludeFolder": ["/log", "/node_modules", "/.idea"]
+{
+  "config": {
+    "idea": {
+      "index": ["/log", "/node_modules", "/.idea"]
+    }
+  }
+}
 ```
 
 ### Example

@@ -6,5 +6,9 @@
   "scripts": {
     "preinstall": "npm install idea-exclude-dir && node ./node_modules/idea-exclude-dir/index-cli.js"
   },
-  "excludeFolder": ["/log", "/node_modules", "/.idea"]
+  "config": {
+    "idea": {
+      "index": ["/log", "/node_modules", "/.idea"]
+    }
+  }
 }

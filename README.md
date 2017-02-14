@@ -25,14 +25,16 @@ npm install idea-exclude-dir --save-dev
 
 `In package.json`
 
-#### 在`scripts`字段增加以下代码
+#### 在 `scripts` 字段增加以下代码
+
 ```js
 "scripts": {
-  "preinstall": "npm install idea-exclude-dir && node ./node_modules/idea-exclude-dir/index-cli.js"
+  "preinstall": "npm install idea-exclude-dir && idea-exclude"
 }
 ```
 
-#### 增加`excludeFolder`字段
+
+#### 同时配置 `config.idea.index` 字段
 
 ```js
 {
@@ -43,6 +45,23 @@ npm install idea-exclude-dir --save-dev
   }
 }
 ```
+
+
+#### CLI使用方法
+
+全局安装
+
+```bash
+npm install idea-exclude-dir -g
+```
+
+命令行使用
+
+```bash
+idea-exclude -d /abc -d /path/to
+```
+
+
 
 ### Example
 

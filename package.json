@@ -1,8 +1,11 @@
 {
   "name": "idea-exclude-dir",
-  "version": "1.2.2",
+  "version": "2.0.0",
   "description": "exclude dir in idea(webstorm, intelli IDEA ......)",
   "main": "index.js",
+  "bin": {
+    "idea-exclude": "bin/cli.js"
+  },
   "keywords": [
     "idea",
     "exclude",
@@ -13,6 +16,7 @@
   ],
   "dependencies": {
     "co": "^4.6.0",
+    "minimist": "^1.2.0",
     "xml2js": "^0.4.17"
   },
   "license": "MIT",

@@ -1,6 +1,20 @@
 # idea-exclude-dir
 
-[![npm](https://img.shields.io/npm/v/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir) [![npm](https://img.shields.io/node/v/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir) [![npm](https://img.shields.io/npm/dt/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir) [![npm](https://img.shields.io/npm/dm/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir) [![npm](https://img.shields.io/github/stars/maxming2333/idea-exclude-dir.svg?style=social&label=Star)](https://github.com/maxming2333/idea-exclude-dir) 
+[![npm](https://img.shields.io/npm/v/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir)
+[![npm](https://img.shields.io/node/v/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir)
+[![npm](https://img.shields.io/npm/dt/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir)
+[![npm](https://img.shields.io/npm/dm/idea-exclude-dir.svg)](https://www.npmjs.com/package/idea-exclude-dir)
+[![npm](https://img.shields.io/github/stars/maxming2333/idea-exclude-dir.svg?style=social&label=Star)](https://github.com/maxming2333/idea-exclude-dir) 
+
+-----
+
+> A plugin used to set the jetbrains editor to exclude the folder
+
+[![NPM](https://nodei.co/npm-dl/idea-exclude-dir.png)](https://nodei.co/npm/idea-exclude-dir/)
+
+[![NPM](https://nodei.co/npm/idea-exclude-dir.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/idea-exclude-dir/)
+
+-----
 
 exclude dir in idea(webstorm, intelli IDEA ......)
 

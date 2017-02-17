@@ -1,6 +1,6 @@
 {
   "name": "idea-exclude-dir",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "exclude dir in idea(webstorm, intelli IDEA ......)",
   "main": "index.js",
   "bin": {
@@ -12,6 +12,7 @@
     "webstorm",
     "IntelliJ",
     "IDEA",
+    "IntelliJ IDEA",
     "jetbrains",
     "index",
     "indexing"

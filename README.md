@@ -16,7 +16,7 @@
 
 -----
 
-exclude dir in idea(webstorm, intelli IDEA ......)
+exclude dir in idea(webstorm, IntelliJ IDEA ......)
 
 增加 idea 下自动exclude `node_modules`文件夹
 

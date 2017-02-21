@@ -26,11 +26,10 @@ exports.buildObject = function(obj) {
 };
 
 
-
 // 设置忽略
 exports.setExcludeFolder = function(exclude, use) {
   excludeList.forEach((dir, index) => {
-    if (use[index]) {
+    if (use[ index ]) {
       return;
     }
     exclude.push({
@@ -43,14 +42,14 @@ exports.setExcludeFolder = function(exclude, use) {
 
 
 // 获取项目的 xxx.iml
-exports.getProjectIML = function* (file) {
-  
+exports.getProjectIML = function*(file) {
+
   if (!fs.existsSync(file)) {
     return;
   }
 
   const xml = yield exports.parseString(fs.readFileSync(file, 'utf-8').toString());
-  const content = xml.module.component[0].content[0];
+  const content = xml.module.component[ 0 ].content[ 0 ];
   if (!content.excludeFolder) {
     content.excludeFolder = [];
     exports.setExcludeFolder(content.excludeFolder, []);
@@ -62,7 +61,7 @@ exports.getProjectIML = function* (file) {
       const dir = filePath.substring(filePath.lastIndexOf('$/') + 1);
       const index = excludeList.indexOf(dir);
       if (index >= 0) {
-        haveExclude[index] = true;
+        haveExclude[ index ] = true;
       }
     });
     exports.setExcludeFolder(content.excludeFolder, haveExclude);
@@ -73,26 +72,36 @@ exports.getProjectIML = function* (file) {
 };
 
 // 设置 node_modules 为 exclude
-exports.excludeDir = function (dirList) {
-  const workspaceFile = path.join(exports.cwd, '.idea', 'workspace.xml');
+exports.excludeDir = function(dirList) {
+  const modulesFile = path.join(exports.cwd, '.idea', 'modules.xml');
 
-  // 检测是否含有 workspace.xml 文件
-  if (!fs.existsSync(workspaceFile) || !(dirList instanceof Array)) {
+  // 检测是否含有 modules.xml 文件
+  if (!fs.existsSync(modulesFile) || !(dirList instanceof Array)) {
     return;
   }
 
   // 标准化 dirList
   dirList.forEach((dir, index) => {
-    excludeList[index] = /^\//ig.test(dir) ? dir : '/' + dir;
+    excludeList[ index ] = /^\//ig.test(dir) ? dir : '/' + dir;
   });
 
-  // 解析 workspace.xml
-  co(function* () {
-    const workspace = yield exports.parseString(fs.readFileSync(workspaceFile, 'utf-8').toString());
+  // 解析 modules.xml
+  co(function*() {
+    const modules = yield exports.parseString(fs.readFileSync(modulesFile, 'utf-8').toString());
     let iml;
-    workspace.project.component.forEach(item => {
-      if (item.$.name === 'FavoritesManager') {
-        iml = path.join(exports.cwd, '.idea', `${item.favorites_list[0].$.name}.iml`);
+    modules.project.component.forEach(component => {
+      if (component.$.name === 'ProjectModuleManager') {
+        component.modules.forEach(module => {
+          module.module.some(item => {
+            const reg = /^\$PROJECT_DIR\$\/(\.idea\/([^\/]+)\.iml)$/;
+            const isIml = reg.test(item.$.filepath);
+            if (isIml) {
+              iml = item.$.filepath.replace(reg, `${exports.cwd}/$1`);
+              return true;
+            }
+          });
+        });
+        iml = path.join(iml);
       }
     });
     iml && (yield exports.getProjectIML(iml));

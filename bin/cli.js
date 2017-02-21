@@ -18,5 +18,8 @@ if (argv.d) {
   list = list.concat(argv.d);
 }
 
+// 去重
+list = Array.from(new Set(list));
+
 exclude.cwd = CWD;
 exclude.excludeDir(list);

@@ -8,7 +8,7 @@ const co = require('co');
 exports.cwd = path.join(__dirname, '../../');
 
 const prefix = '$MODULE_DIR$/';
-let excludeList = [];
+let targetList = [];
 
 // XML 转 Object
 exports.parseString = function*(xml) {
@@ -28,7 +28,7 @@ exports.buildObject = function(obj) {
 
 // 设置忽略
 exports.setExcludeFolder = function(exclude, use) {
-  excludeList.forEach((dir, index) => {
+  targetList.forEach((dir, index) => {
     if (use[ index ]) {
       return;
     }
@@ -41,8 +41,8 @@ exports.setExcludeFolder = function(exclude, use) {
 };
 
 
-// 获取项目的 xxx.iml
-exports.getProjectIML = function*(file) {
+// 更新项目.iml文件
+exports.updateProjectIml = function*(file, cancel) {
 
   if (!fs.existsSync(file)) {
     return;
@@ -50,21 +50,27 @@ exports.getProjectIML = function*(file) {
 
   const xml = yield exports.parseString(fs.readFileSync(file, 'utf-8').toString());
   const content = xml.module.component[ 0 ].content[ 0 ];
-  if (!content.excludeFolder) {
-    content.excludeFolder = [];
-    exports.setExcludeFolder(content.excludeFolder, []);
-  } else {
+  content.excludeFolder = content.excludeFolder || [];
+  if (!cancel) {
     const haveExclude = [];
     // 检查是否已经含有 node_modules 忽略
     content.excludeFolder.forEach(function(exclude) {
       const filePath = exclude.$.url;
       const dir = filePath.substring(filePath.lastIndexOf('$/') + 1);
-      const index = excludeList.indexOf(dir);
+      const index = targetList.indexOf(dir);
       if (index >= 0) {
         haveExclude[ index ] = true;
       }
     });
     exports.setExcludeFolder(content.excludeFolder, haveExclude);
+  } else {
+    content.excludeFolder.forEach(function(exclude, index) {
+      const filePath = exclude.$.url;
+      const dir = filePath.substring(filePath.lastIndexOf('$/') + 1);
+      if (targetList.indexOf(dir) >= 0) {
+        content.excludeFolder.splice(index);
+      }
+    });
   }
 
   // 返流
@@ -72,7 +78,7 @@ exports.getProjectIML = function*(file) {
 };
 
 // 设置 node_modules 为 exclude
-exports.excludeDir = function(dirList) {
+exports.doTargetDir = function(dirList, cancel) {
   const modulesFile = path.join(exports.cwd, '.idea', 'modules.xml');
 
   // 检测是否含有 modules.xml 文件
@@ -82,7 +88,7 @@ exports.excludeDir = function(dirList) {
 
   // 标准化 dirList
   dirList.forEach((dir, index) => {
-    excludeList[ index ] = /^\//ig.test(dir) ? dir : '/' + dir;
+    targetList[ index ] = /^\//ig.test(dir) ? dir : '/' + dir;
   });
 
   // 解析 modules.xml
@@ -91,9 +97,9 @@ exports.excludeDir = function(dirList) {
     let iml;
     modules.project.component.forEach(component => {
       if (component.$.name === 'ProjectModuleManager') {
-        component.modules.forEach(module => {
-          module.module.some(item => {
-            const reg = /^\$PROJECT_DIR\$\/(\.idea\/([^\/]+)\.iml)$/;
+        component.modules.forEach(current => {
+          current.module.some(item => {
+            const reg = /^\$PROJECT_DIR\$\/(.*\.iml)$/;
             const isIml = reg.test(item.$.filepath);
             if (isIml) {
               iml = item.$.filepath.replace(reg, `${exports.cwd}/$1`);
@@ -104,7 +110,7 @@ exports.excludeDir = function(dirList) {
         iml = path.join(iml);
       }
     });
-    iml && (yield exports.getProjectIML(iml));
+    iml && (yield exports.updateProjectIml(iml, cancel));
   });
 
 };

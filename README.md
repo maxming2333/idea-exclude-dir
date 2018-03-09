@@ -75,6 +75,7 @@ npm install idea-exclude-dir -g
 
 ```bash
 idea-exclude -d /abc -d /path/to
+idea-exclude -d /abc -d /path/to -c # 对目录取消exclude操作
 ```
 
 

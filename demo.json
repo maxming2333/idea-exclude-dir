@@ -4,7 +4,7 @@
   "description": "this is demo json file",
   "main": "index.js",
   "scripts": {
-    "preinstall": "npm install idea-exclude-dir && dea-exclude"
+    "preinstall": "npm install idea-exclude-dir && idea-exclude"
   },
   "config": {
     "idea": {

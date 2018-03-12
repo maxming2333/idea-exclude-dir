@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const xml2js = require('xml2js');
 const co = require('co');
+const glob = require('glob');
 
 exports.cwd = path.join(__dirname, '../../');
 
@@ -43,18 +44,25 @@ exports.setExcludeFolder = function(exclude, use) {
 
 // 更新项目.iml文件
 exports.updateProjectIml = function*(file, cancel) {
-
   if (!fs.existsSync(file)) {
     return;
   }
 
   const xml = yield exports.parseString(fs.readFileSync(file, 'utf-8').toString());
-  const content = xml.module.component[ 0 ].content[ 0 ];
+
+  let content = {};
+  xml.module.component.filter(component => {
+    if (component && component.content && component.content[0]) {
+      content = component.content[0];
+      return true;
+    }
+  });
+
   content.excludeFolder = content.excludeFolder || [];
   if (!cancel) {
     const haveExclude = [];
     // 检查是否已经含有 node_modules 忽略
-    content.excludeFolder.forEach(function(exclude) {
+    content.excludeFolder.forEach(exclude => {
       const filePath = exclude.$.url;
       const dir = filePath.substring(filePath.lastIndexOf('$/') + 1);
       const index = targetList.indexOf(dir);
@@ -64,7 +72,7 @@ exports.updateProjectIml = function*(file, cancel) {
     });
     exports.setExcludeFolder(content.excludeFolder, haveExclude);
   } else {
-    content.excludeFolder.forEach(function(exclude, index) {
+    content.excludeFolder.forEach((exclude, index) => {
       const filePath = exclude.$.url;
       const dir = filePath.substring(filePath.lastIndexOf('$/') + 1);
       if (targetList.indexOf(dir) >= 0) {
@@ -81,9 +89,14 @@ exports.updateProjectIml = function*(file, cancel) {
 exports.doTargetDir = function(dirList, cancel) {
   const modulesFile = path.join(exports.cwd, '.idea', 'modules.xml');
 
+  let iml;
+
   // 检测是否含有 modules.xml 文件
   if (!fs.existsSync(modulesFile) || !(dirList instanceof Array)) {
-    return;
+    var files = glob.sync("*.iml", {realpath: true});
+    if (files && files[0]) {
+      iml = files[0];
+    }
   }
 
   // 标准化 dirList
@@ -93,23 +106,24 @@ exports.doTargetDir = function(dirList, cancel) {
 
   // 解析 modules.xml
   co(function*() {
-    const modules = yield exports.parseString(fs.readFileSync(modulesFile, 'utf-8').toString());
-    let iml;
-    modules.project.component.forEach(component => {
-      if (component.$.name === 'ProjectModuleManager') {
-        component.modules.forEach(current => {
-          current.module.some(item => {
-            const reg = /^\$PROJECT_DIR\$\/(.*\.iml)$/;
-            const isIml = reg.test(item.$.filepath);
-            if (isIml) {
-              iml = item.$.filepath.replace(reg, `${exports.cwd}/$1`);
-              return true;
-            }
+    if (!iml) {
+      const modules = yield exports.parseString(fs.readFileSync(modulesFile, 'utf-8').toString());
+      modules.project.component.forEach(component => {
+        if (component.$.name === 'ProjectModuleManager') {
+          component.modules.forEach(current => {
+            current.module.some(item => {
+              const reg = /^\$PROJECT_DIR\$\/(.*\.iml)$/;
+              const isIml = reg.test(item.$.filepath);
+              if (isIml) {
+                iml = item.$.filepath.replace(reg, `${exports.cwd}/$1`);
+                return true;
+              }
+            });
           });
-        });
-        iml = path.join(iml);
-      }
-    });
+          iml = path.join(iml);
+        }
+      });
+    }
     iml && (yield exports.updateProjectIml(iml, cancel));
   });
 

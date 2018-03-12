@@ -13,9 +13,6 @@ let list = ['/node_modules'];
 let pkgList;
 let cancel = false;
 
-if (!fs.existsSync(modulesFile)) {
-  process.exit(0);
-}
 
 // 检测 package.json
 if (fs.existsSync(pkgFile)){

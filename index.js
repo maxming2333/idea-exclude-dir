@@ -79,10 +79,11 @@ exports.updateProjectIml = function*(file, cancel) {
 
 // 设置 node_modules 为 exclude
 exports.doTargetDir = function(dirList, cancel) {
-  const modulesFile = path.join(exports.cwd, '.idea', 'modules.xml');
+  const projectName = path.basename(exports.cwd);
+  const ideaConfigPath = path.join(exports.cwd, '.idea');
+  const modulesFile = path.join(ideaConfigPath, 'modules.xml');
 
-  // 检测是否含有 modules.xml 文件
-  if (!fs.existsSync(modulesFile) || !(dirList instanceof Array)) {
+  if (!is_dir(ideaConfigPath) || !(dirList instanceof Array)) {
     return;
   }
 
@@ -93,6 +94,20 @@ exports.doTargetDir = function(dirList, cancel) {
 
   // 解析 modules.xml
   co(function*() {
+    // 检测是否含有 modules.xml 文件
+    if (!fs.existsSync(modulesFile)) {
+      const modulesTemplateFile = path.join(__dirname, 'data/modules.xml');
+      const projectTemplateFile = path.join(__dirname, 'data/project.iml');
+      const projectFile = path.join(ideaConfigPath, `${projectName}.iml`);
+      const modulesTemplateText = fs.readFileSync(modulesTemplateFile).toString().replace(/\{\{([a-z0-9_-]+)\}\}/ig, (s, p1) => {
+        if (p1 === 'project_name') {
+          return projectName;
+        }
+      });
+      fs.writeFileSync(modulesFile, modulesTemplateText);
+      fs.writeFileSync(projectTemplateFile, fs.readFileSync(projectFile));
+      return;
+    }
     const modules = yield exports.parseString(fs.readFileSync(modulesFile, 'utf-8').toString());
     let iml;
     modules.project.component.forEach(component => {
@@ -112,5 +127,13 @@ exports.doTargetDir = function(dirList, cancel) {
     });
     iml && (yield exports.updateProjectIml(iml, cancel));
   });
-
 };
+
+function is_dir(path) {
+  try {
+      const stat = fs.lstatSync(path);
+      return stat.isDirectory();
+  } catch (e) {
+      return false;
+  }
+}

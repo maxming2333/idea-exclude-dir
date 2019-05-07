@@ -82,4 +82,4 @@ idea-exclude -d /abc -d /path/to -c # 对目录取消exclude操作
 
 ### Example
 
-[demo.json](demo.json)
+[package.json](example/package.json)

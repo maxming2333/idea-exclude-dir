@@ -83,7 +83,7 @@ exports.doTargetDir = function(dirList, cancel) {
   const ideaConfigPath = path.join(exports.cwd, '.idea');
   const modulesFile = path.join(ideaConfigPath, 'modules.xml');
 
-  if (!is_dir(ideaConfigPath) || !(dirList instanceof Array)) {
+  if (!isDirectory(ideaConfigPath) || !(dirList instanceof Array)) {
     return;
   }
 
@@ -105,7 +105,7 @@ exports.doTargetDir = function(dirList, cancel) {
         }
       });
       fs.writeFileSync(modulesFile, modulesTemplateText);
-      fs.writeFileSync(projectTemplateFile, fs.readFileSync(projectFile));
+      fs.writeFileSync(projectFile, fs.readFileSync(projectTemplateFile));
       return;
     }
     const modules = yield exports.parseString(fs.readFileSync(modulesFile, 'utf-8').toString());
@@ -129,7 +129,7 @@ exports.doTargetDir = function(dirList, cancel) {
   });
 };
 
-function is_dir(path) {
+function isDirectory(path) {
   try {
       const stat = fs.lstatSync(path);
       return stat.isDirectory();
